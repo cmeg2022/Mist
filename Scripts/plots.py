@@ -1,7 +1,7 @@
 import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
-import seaborn as sns
+#import seaborn as sns
 
 def plotFromData(x,y,xlabel='xlabel',ylabel='ylabel', title='title'):
     plt.rc('font', family='serif')
