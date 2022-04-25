@@ -364,3 +364,49 @@ def precipitateCentresNonCog(labelImage, labelNumber):
     
         
     return int(cog_y),int(cog_x)
+
+def binarizeRealImage(image, upper_limit=None, lower_limit=None):
+    if upper_limit==None:
+        upper_limit = np.max(image)
+    if lower_limit==None:
+        lower_limit = np.median(image)
+    
+    return (image<upper_limit)*1 * (image>lower_limit)*1
+
+def selectPrecipitateBySize(image,min_size, max_size):
+    numberOfPpts = np.max(image)
+    indexList = []
+    for i in range(1,numberOfPpts):
+        image_only_index = (image==i)*1
+        if np.sum(image_only_index) > min_size:
+            if np.sum(image_only_index) < max_size:
+                indexList.append(i)
+     
+    finalImage = np.zeros(image.shape)
+    for i in range(image.shape[0]):
+        for j in range(image.shape[1]):
+            if image[i][j] in indexList:
+                finalImage[i][j] = image[i][j]
+                
+    return finalImage
+
+
+def getHistogram(hklm_image, min_size=None, max_size=None, num_bins=10):
+    if min_size==None:
+        min_size = np.min(hklm_image)
+    if max_size==None:
+        max_size = np.max(hklm_image)
+    
+    listSizes = []
+    for i in range(0, np.max(hklm_image)):
+        area = np.sum((hklm_image==i)*1)
+        if (area > min_size) and (area < max_size):
+            listSizes.append(area)
+            
+    hist, bins = np.histogram(listSizes, bins=num_bins)
+    
+    plt.hist( listSizes, bins)
+    plt.show()
+    
+    return hist, bins
+    s
