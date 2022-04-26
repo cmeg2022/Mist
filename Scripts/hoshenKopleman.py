@@ -406,7 +406,10 @@ def getHistogram(hklm_image, min_size=None, max_size=None, num_bins=10):
     hist, bins = np.histogram(listSizes, bins=num_bins)
     
     plt.hist( listSizes, bins)
+    plt.xlabel("Precipitate Size")
+    plt.ylabel("Number of precipitates")
+    plt.title("Precipitate size distribution")
     plt.show()
     
     return hist, bins
-    s
+    
