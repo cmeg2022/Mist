@@ -172,7 +172,112 @@ def hoshenKoplemanLabels(img_):
                     listy[labels[i][j]]=num
                     labels[i][j]=num
     return labels
+
+
+def hoshenKoplemanLabels_nonpbc(img_):
     
+    '''
+    Input : microstructure as numpy array
+    
+    Output : array with each precipitate separated and numbered, matrix numbered as 0
+    
+    '''
+    
+    properLabels = []
+    sz = []
+    properLabels=[]
+    sz=[]
+    properLabels.append(0)
+    sz.append(1)
+        
+    
+    largestLabel = 0
+    labels = np.zeros(img_.shape).astype('int32')
+    for j in range(img_.shape[0]):
+        for i in range(img_.shape[1]):
+            if img_[j][i] == 1:
+                if i>0 and j>0:
+                    left = img_[j][i-1]
+                    above = img_[j-1][i]
+        
+                    if left==0 and above== 0:
+                        largestLabel=largestLabel+1
+                        labels[j][i] = largestLabel
+                        properLabels.append(largestLabel)
+                        sz.append(1)
+                    
+                    if left==1 and above== 0:
+                        labels[j][i] = root(properLabels,labels[j][i-1])
+                    if left==0 and above== 1:
+                        labels[j][i] = root(properLabels,labels[j-1][i])
+                    if left==1 and above== 1:
+                    
+                        if labels[j][i-1]!= labels[j-1][i]:
+                            if labels[j][i-1]> labels[j-1][i]:
+                                properLabels, sz= union(properLabels,sz,int(labels[j][i-1]),int(labels[j-1][i]))
+                                labels[j][i] = root(properLabels,int(labels[j][i-1]))
+                            if labels[j][i-1]< labels[j-1][i]:
+                                properLabels , sz=union(properLabels,sz,int(labels[j-1][i]),int(labels[j][i-1]))
+                                labels[j][i] = root(properLabels,int(labels[j][i-1]))
+                        else:
+                            labels[j][i] = root(properLabels,labels[j][i-1])
+                        
+                if i == 0 and j == 0:
+                    if img_[j][i] == 1:
+                        largestLabel=largestLabel+1
+                        labels[j][i] = largestLabel
+                        properLabels.append(largestLabel)
+                        sz.append(1)
+                if i == 0 and j>0:
+                    above = img_[j-1][i]
+                    if img_[j][i] == 1:
+                        if above==1:
+                            labels[j][i] = root(properLabels,labels[j-1][i])
+                        if above==0:
+                            largestLabel=largestLabel+1
+                            labels[j][i] = largestLabel
+                            properLabels.append(largestLabel)
+                            sz.append(1)
+                if i>0 and j==0:
+                    left = img_[j][i-1]
+                    if img_[j][i] == 1:
+                        if left==1:
+                            labels[j][i] = root(properLabels,labels[j][i-1])
+                    
+                        if left==0 :
+                            largestLabel=largestLabel+1
+                            labels[j][i] = largestLabel
+                            properLabels.append(largestLabel)
+                            sz.append(1)
+                            
+    for i in range(labels.shape[0]):
+        for j in range(labels.shape[1]):
+            if labels[i][j]!=0:
+                labels[i][j] = root(properLabels,labels[i][j])
+                            
+
+    #------------------ 2nd Loop starts here--------------------------#
+    
+    
+    listy ={}
+    num=0
+#     for i in range(labels.shape[0]):
+#         for j in range(labels.shape[1]):
+#             if labels[i][j]!=0:
+#                 labels[i][j] = root(properLabels,labels[i][j])
+                
+    for i in range(labels.shape[0]):
+        for j in range(labels.shape[1]):
+            if labels[i][j]!=0:            
+                if labels[i][j] in listy.keys():
+                    labels[i][j]=listy[labels[i][j]]
+                else:
+                    num=num+1
+                    listy[labels[i][j]]=num
+                    labels[i][j]=num
+    return labels
+
+
 def precipitateCentres(labelImage, labelNumber):
     
     '''
