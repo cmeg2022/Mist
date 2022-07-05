@@ -7,7 +7,7 @@ The MiSt library can be used for the analysis of both experimental and simulated
 Clone this git repository in the folder where you wish to analyze images with:
 
 ```
-git clone https://github.com/adithyaiyer1999/mist.git
+git clone https://github.com/cmeg2022/Mist.git
 ```
 
 To install the base libraries:
